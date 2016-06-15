@@ -158,7 +158,7 @@
         if (this.hasMajorDiagonalConflictAt(i)) {
           return true;
         }
-        
+
         if (this.hasMajorDiagonalConflictAt(majorDiagonalColIndex)) {
           return true;
         }
@@ -174,13 +174,51 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var n = this.get('n');
+      var rows = this.rows();
+      var countPieces = 0;
+      var column = minorDiagonalColumnIndexAtFirstRow;
+      var rowCount = 0;
+      //var limiter = Math.min(column + rowCount, n - 1);
+
+
+      for (var i = 0; i < n; i++) {
+        // console.log('index: ', column + rowCount);
+        // console.log('i: ', i);
+        var check = this._isInBounds(i, (column - i));
+        if (check && rows[i][column - i] === 1) {
+          countPieces++;
+        }
+      }
+
+      return countPieces > 1 ? true : false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      var n = this.get('n');
+      var tempIndex = n;
+
+      for (var i = (n - 1); i >= 0; i--) {
+        // var minorDiagonalColIndex = this._getFirstRowColumnIndexForMinorDiagonalOn(tempIndex, i);
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+
+        if (this.hasMinorDiagonalConflictAt(tempIndex)) {
+          return true;
+        }
+
+        tempIndex++;
+      }
       return false; // fixme
     }
+
+
+//     _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
+//   return colIndex + rowIndex;
+// },
+
 
     /*--------------------  End of Helper Functions  ---------------------*/
 
