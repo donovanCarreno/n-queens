@@ -16,21 +16,36 @@
 
 
 window.findNRooksSolution = function(n) {
-  var solution = [];
   var newBoard = new Board({'n': n});
-  var rows = newBoard.rows();
+  var solution;
 
-  for (var i = 0; i < rows.length; i++) {
-    for (var j = 0; j < rows.length; j++) {
-      newBoard.togglePiece(i, j);
+  var helperSolution = function(board, rowIndex) {
 
-      if (newBoard.hasAnyRooksConflicts()) {
-        newBoard.togglePiece(i, j);
+    if (solution) {
+      return;
+    }
+
+    for (var i = 0; i < n; i++) {
+      if (solution === undefined) {
+        board.togglePiece(rowIndex, i);
+      }
+
+      if (!board.hasAnyRooksConflicts()) {
+        if (rowIndex < (n - 1)) {
+          helperSolution(board, rowIndex + 1);
+        } else {
+          solution = board.rows();
+          return solution;
+        }
+      }
+      if (solution === undefined) {
+        board.togglePiece(rowIndex, i);
       }
     }
-  }
-  
-  solution = newBoard.rows();
+
+  };
+
+  helperSolution(newBoard, 0);
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
